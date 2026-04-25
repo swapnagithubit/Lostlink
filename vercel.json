@@ -1,3 +1,9 @@
 {
-  "rootDirectory": "lostfrontend"
+  "version": 2,
+  "builds": [
+    {
+      "src": "lostfrontend/package.json",
+      "use": "@vercel/next"
+    }
+  ]
 }
