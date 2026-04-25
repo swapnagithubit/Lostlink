@@ -40,44 +40,82 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, [])
 
   const login = async (email: string, password: string) => {
-    const res = await fetch(`${API_BASE}/auth/login`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, password }),
-    })
+    try {
+      const res = await fetch(`${API_BASE}/auth/login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      })
 
-    if (!res.ok) {
-      const error = await res.json()
-      throw new Error(error.msg || "Login failed")
+      if (!res.ok) {
+        const contentType = res.headers.get("content-type")
+        if (contentType?.includes("application/json")) {
+          const error = await res.json()
+          throw new Error(error.msg || error.message || "Login failed")
+        } else {
+          throw new Error(`Server error: ${res.status} ${res.statusText}. Is the backend running?`)
+        }
+      }
+
+      const data = await res.json()
+      const newToken = data.token
+
+      // Decode JWT to get user info (simple decode, not verification)
+      const payload = JSON.parse(atob(newToken.split(".")[1]))
+      const newUser = { id: payload.id, name: email.split("@")[0], email }
+
+      setToken(newToken)
+      setUser(newUser)
+      localStorage.setItem("lostlink_token", newToken)
+      localStorage.setItem("lostlink_user", JSON.stringify(newUser))
+    } catch (err) {
+      if (err instanceof Error) {
+        throw err
+      }
+      throw new Error("Network error. Is the backend running at http://localhost:5000?")
     }
-
-    const data = await res.json()
-    const newToken = data.token
-
-    // Decode JWT to get user info (simple decode, not verification)
-    const payload = JSON.parse(atob(newToken.split(".")[1]))
-    const newUser = { id: payload.id, name: email.split("@")[0], email }
-
-    setToken(newToken)
-    setUser(newUser)
-    localStorage.setItem("lostlink_token", newToken)
-    localStorage.setItem("lostlink_user", JSON.stringify(newUser))
   }
 
   const signup = async (name: string, email: string, password: string) => {
-    const res = await fetch(`${API_BASE}/auth/signup`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name, email, password }),
-    })
+    try {
+      const res = await fetch(`${API_BASE}/auth/signup`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, email, password }),
+      })
 
-    if (!res.ok) {
-      const error = await res.json()
-      throw new Error(error.error || "Signup failed")
+      if (!res.ok) {
+        const contentType = res.headers.get("content-type")
+        if (contentType?.includes("application/json")) {
+          const error = await res.json()
+          throw new Error(error.error || error.message || "Signup failed")
+        } else {
+          throw new Error(`Server error: ${res.status} ${res.statusText}. Is the backend running?`)
+        }
+      }
+
+      const data = await res.json()
+      
+      // If token is in signup response, use it directly
+      if (data.token) {
+        const newToken = data.token
+        const payload = JSON.parse(atob(newToken.split(".")[1]))
+        const newUser = { id: payload.id, name: data.user?.name || email.split("@")[0], email: data.user?.email || email }
+
+        setToken(newToken)
+        setUser(newUser)
+        localStorage.setItem("lostlink_token", newToken)
+        localStorage.setItem("lostlink_user", JSON.stringify(newUser))
+      } else {
+        // Fallback: auto login after signup
+        await login(email, password)
+      }
+    } catch (err) {
+      if (err instanceof Error) {
+        throw err
+      }
+      throw new Error("Network error. Is the backend running?")
     }
-
-    // Auto login after signup
-    await login(email, password)
   }
 
   const logout = () => {
