@@ -4,10 +4,12 @@ import { useState, useEffect } from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { motion, AnimatePresence, useScroll, useMotionValueEvent } from "framer-motion"
-import { Menu, X, Search, MapPin, Plus, LayoutDashboard, LogIn, LogOut, User, Sparkles, Zap } from "lucide-react"
+import { Menu, X, Search, MapPin, Plus, LayoutDashboard, LogIn, LogOut, Sparkles, Zap } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { useAuth } from "@/lib/auth-context"
 import { cn } from "@/lib/utils"
+import { socket } from "@/lib/socket"
+import { toast } from "sonner"
 
 const navLinks = [
   { href: "/", label: "Home", icon: Sparkles },
@@ -35,6 +37,30 @@ export function Navbar() {
     setIsOpen(false)
   }, [pathname])
 
+  // Socket.io - register user and listen for match notifications
+  useEffect(() => {
+    if (isAuthenticated && user?.id) {
+      socket.connect()
+      socket.emit("register", user.id)
+
+      socket.on("matchFound", (data) => {
+        toast.success(data.message, {
+          description: `Location: ${data.foundItem.location} | Community: ${data.foundItem.community}`,
+          duration: 8000,
+          action: {
+            label: "View",
+            onClick: () => window.location.href = "/dashboard"
+          }
+        })
+      })
+    }
+
+    return () => {
+      socket.off("matchFound")
+      socket.disconnect()
+    }
+  }, [isAuthenticated, user?.id])
+
   return (
     <>
       <motion.nav
@@ -43,8 +69,8 @@ export function Navbar() {
         transition={{ type: "spring", stiffness: 100 }}
         className={cn(
           "fixed top-0 left-0 right-0 z-50 transition-all duration-300",
-          isScrolled 
-            ? "border-b border-border/50 bg-background/80 backdrop-blur-xl shadow-lg shadow-black/5" 
+          isScrolled
+            ? "border-b border-border/50 bg-background/80 backdrop-blur-xl shadow-lg shadow-black/5"
             : "bg-transparent"
         )}
       >

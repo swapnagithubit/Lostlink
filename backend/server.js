@@ -12,7 +12,6 @@ const authRoutes = require("./routes/authRoutes");
 const app = express();
 const server = http.createServer(app);
 
-// Socket setup
 const io = new Server(server, {
   cors: {
     origin: ["https://lostapp-wheat.vercel.app", "http://localhost:3000"],
@@ -20,10 +19,29 @@ const io = new Server(server, {
   }
 });
 
-// Make io accessible
-app.set("io", io);
+// Store userId -> socketId mapping
+const userSockets = {};
 
-// Middleware
+io.on("connection", (socket) => {
+  console.log("⚡ User connected:", socket.id);
+
+  // User registers their userId
+  socket.on("register", (userId) => {
+    userSockets[userId] = socket.id;
+    console.log(`✅ User ${userId} registered with socket ${socket.id}`);
+  });
+
+  socket.on("disconnect", () => {
+    Object.keys(userSockets).forEach((key) => {
+      if (userSockets[key] === socket.id) delete userSockets[key];
+    });
+    console.log("❌ User disconnected:", socket.id);
+  });
+});
+
+app.set("io", io);
+app.set("userSockets", userSockets);
+
 app.use(cors({
   origin: ["https://lostapp-wheat.vercel.app", "http://localhost:3000"],
   methods: ["GET", "POST", "PUT", "DELETE"],
@@ -31,29 +49,16 @@ app.use(cors({
 }));
 app.use(express.json());
 
-// Connect DB
 connectDB();
 
-// Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/items", itemRoutes);
 
-// Socket connection
-io.on("connection", (socket) => {
-  console.log("⚡ User connected:", socket.id);
-
-  socket.on("disconnect", () => {
-    console.log("❌ User disconnected:", socket.id);
-  });
-});
-
-// Global error handler
 app.use((err, req, res, next) => {
   console.error(err.stack);
   res.status(500).json({ message: "Something went wrong!" });
 });
 
-// Start server
 server.listen(process.env.PORT || 5000, () => {
   console.log(`🚀 Server running on port ${process.env.PORT || 5000}`);
 });

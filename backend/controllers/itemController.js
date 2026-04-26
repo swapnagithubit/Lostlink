@@ -1,8 +1,6 @@
 const Item = require("../models/Item");
 const matchItems = require("../utils/matcher");
-console.log("matchItems type:", typeof matchItems); // 👈 debug line
 
-// ➕ Add Item
 exports.addItem = async (req, res) => {
   try {
     const newItem = new Item({
@@ -12,15 +10,27 @@ exports.addItem = async (req, res) => {
 
     await newItem.save();
 
-    const allItems = await Item.find({
-      community: newItem.community
-    });
-
+    const allItems = await Item.find({ community: newItem.community });
     const matches = matchItems(newItem, allItems);
 
     const io = req.app.get("io");
+    const userSockets = req.app.get("userSockets");
+
+    // Notify the specific user who lost the matched item
+    if (matches.length > 0) {
+      matches.forEach((match) => {
+        const socketId = userSockets[match.user.toString()];
+        if (socketId) {
+          io.to(socketId).emit("matchFound", {
+            message: `🎉 Someone found your "${match.title}"!`,
+            foundItem: newItem,
+            lostItem: match,
+          });
+        }
+      });
+    }
+
     io.emit("newItem", newItem);
-    io.emit("matchFound", matches);
 
     res.status(201).json({
       success: true,
@@ -33,7 +43,6 @@ exports.addItem = async (req, res) => {
   }
 };
 
-// 📥 Get all items
 exports.getItems = async (req, res) => {
   try {
     const items = await Item.find().sort({ createdAt: -1 });
@@ -43,20 +52,17 @@ exports.getItems = async (req, res) => {
   }
 };
 
-// 🔍 Get by community
 exports.getByCommunity = async (req, res) => {
   try {
     const items = await Item.find({
       community: req.params.community
     }).sort({ createdAt: -1 });
-
     res.json(items);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 };
 
-// 🔄 Update item status (ONLY OWNER)
 exports.updateStatus = async (req, res) => {
   try {
     const item = await Item.findById(req.params.id);
@@ -80,7 +86,6 @@ exports.updateStatus = async (req, res) => {
   }
 };
 
-// ❌ Delete item (ONLY OWNER)
 exports.deleteItem = async (req, res) => {
   try {
     const item = await Item.findById(req.params.id);
