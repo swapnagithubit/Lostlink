@@ -2,7 +2,7 @@ import { Navbar } from "@/components/navbar"
 import { Dashboard } from "@/components/dashboard"
 
 export const metadata = {
-  title: "Dashboard | LostLink",
+  title: "Dashboard | FindMyThing",
   description: "Manage your reported lost and found items",
 }
 

@@ -1,4 +1,4 @@
-# LostLink
+# FindMyThing
 
 A full-stack web application to help users find and report lost or found items. Connect with your community to recover lost belongings and help others find theirs.
 
@@ -15,7 +15,7 @@ A full-stack web application to help users find and report lost or found items. 
 ## Project Structure
 
 ```
-LostLink/
+FindMyThing/
 ├── backend/              # Node.js/Express API server
 │   ├── config/          # Database configuration
 │   ├── controllers/      # Route controllers
@@ -63,8 +63,8 @@ LostLink/
 
 1. **Clone the repository**
 ```bash
-git clone https://github.com/swapnagithubit/Lostlink.git
-cd LostLink
+git clone https://github.com/swapnagithubit/FindMyThing.git
+cd FindMyThing
 ```
 
 2. **Backend Setup**

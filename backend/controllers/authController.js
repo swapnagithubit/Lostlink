@@ -88,13 +88,13 @@ exports.forgotPassword = async (req, res) => {
 
     // Send email via Brevo
     await brevoClient.sendTransacEmail({
-      sender: { name: "LostLink", email: process.env.BREVO_SENDER_EMAIL },
+      sender: { name: "FindMyThing", email: process.env.BREVO_SENDER_EMAIL },
       to: [{ email: user.email, name: user.name }],
-      subject: "Reset Your LostLink Password",
+      subject: "Reset Your FindMyThing Password",
       htmlContent: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
           <div style="background: linear-gradient(135deg, #6366f1, #8b5cf6); padding: 30px; border-radius: 16px; text-align: center; margin-bottom: 30px;">
-            <h1 style="color: white; margin: 0; font-size: 28px;">⚡ LostLink</h1>
+            <h1 style="color: white; margin: 0; font-size: 28px;">⚡ FindMyThing</h1>
             <p style="color: rgba(255,255,255,0.8); margin: 8px 0 0;">Campus Lost & Found</p>
           </div>
           <h2 style="color: #1a1a1a;">Reset Your Password</h2>
@@ -114,7 +114,7 @@ exports.forgotPassword = async (req, res) => {
           </p>
           <hr style="border: none; border-top: 1px solid #eee; margin: 20px 0;" />
           <p style="color: #999; font-size: 12px; text-align: center;">
-            © 2024 LostLink. Campus Lost & Found Platform.
+            © 2024 FindMyThing. Campus Lost & Found Platform.
           </p>
         </div>
       `

@@ -29,8 +29,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     // Check for existing token on mount
-    const storedToken = localStorage.getItem("lostlink_token")
-    const storedUser = localStorage.getItem("lostlink_user")
+    const storedToken = localStorage.getItem("FindMyThing_token")
+    const storedUser = localStorage.getItem("FindMyThing_user")
     
     if (storedToken && storedUser) {
       setToken(storedToken)
@@ -66,8 +66,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
       setToken(newToken)
       setUser(newUser)
-      localStorage.setItem("lostlink_token", newToken)
-      localStorage.setItem("lostlink_user", JSON.stringify(newUser))
+      localStorage.setItem("FindMyThing_token", newToken)
+      localStorage.setItem("FindMyThing_user", JSON.stringify(newUser))
     } catch (err) {
       if (err instanceof Error) {
         throw err
@@ -104,8 +104,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
         setToken(newToken)
         setUser(newUser)
-        localStorage.setItem("lostlink_token", newToken)
-        localStorage.setItem("lostlink_user", JSON.stringify(newUser))
+        localStorage.setItem("FindMyThing_token", newToken)
+        localStorage.setItem("FindMyThing_user", JSON.stringify(newUser))
       } else {
         // Fallback: auto login after signup
         await login(email, password)
@@ -121,8 +121,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const logout = () => {
     setToken(null)
     setUser(null)
-    localStorage.removeItem("lostlink_token")
-    localStorage.removeItem("lostlink_user")
+    localStorage.removeItem("FindMyThing_token")
+    localStorage.removeItem("FindMyThing_user")
   }
 
   return (

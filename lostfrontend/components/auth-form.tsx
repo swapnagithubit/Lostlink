@@ -247,7 +247,7 @@ export function AuthForm({ mode }: AuthFormProps) {
                 <div className="text-center">
                   {isLogin ? (
                     <p className="text-muted-foreground">
-                      New to LostLink?{" "}
+                      New to FindMyThing?{" "}
                       <Link href="/signup" className="font-semibold text-primary hover:underline">
                         Create account
                       </Link>

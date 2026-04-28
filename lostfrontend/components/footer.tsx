@@ -137,7 +137,7 @@ export function Footer() {
 
         <div className="mt-12 border-t border-border/40 pt-8 text-center">
           <p className="text-sm text-muted-foreground">
-            © {new Date().getFullYear()} LostLink. All rights reserved.
+            © {new Date().getFullYear()} FindMyThing. All rights reserved.
           </p>
         </div>
       </div>

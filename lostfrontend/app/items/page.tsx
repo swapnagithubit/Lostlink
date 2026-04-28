@@ -2,7 +2,7 @@ import { Navbar } from "@/components/navbar"
 import { ItemsList } from "@/components/items-list"
 
 export const metadata = {
-  title: "Browse Items | LostLink",
+  title: "Browse Items | FindMyThing",
   description: "Browse all lost and found items reported by the community",
 }
 

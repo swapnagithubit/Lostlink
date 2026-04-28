@@ -279,7 +279,7 @@ export default function HomePage() {
                 </span>
               </h2>
               <p className="mx-auto mt-6 max-w-xl text-lg text-muted-foreground">
-                Join thousands of students who&apos;ve reunited with their belongings through LostLink.
+                Join thousands of students who&apos;ve reunited with their belongings through FindMyThing.
               </p>
               
               <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
@@ -317,7 +317,7 @@ export default function HomePage() {
                 <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-primary to-violet-500">
                   <Zap className="h-4 w-4 text-white" />
                 </div>
-                <span className="font-semibold">LostLink</span>
+                <span className="font-semibold">FindMyThing</span>
               </div>
               <p className="text-center text-sm text-muted-foreground">
                 Made with care for students, by students.

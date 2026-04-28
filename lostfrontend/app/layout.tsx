@@ -9,10 +9,10 @@ const _geist = Geist({ subsets: ["latin"] });
 const _geistMono = Geist_Mono({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: 'LostLink - Find What Matters',
+  title: 'FindMyThing - Find What Matters',
   description: 'Community-powered lost and found platform. Report lost or found items and let our smart matching system reunite you with your belongings.',
   keywords: ['lost and found', 'lost items', 'found items', 'community', 'reunite'],
-  authors: [{ name: 'LostLink' }],
+  authors: [{ name: 'FindMyThing' }],
   icons: {
     icon: [
       {

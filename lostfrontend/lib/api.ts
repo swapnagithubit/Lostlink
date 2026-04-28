@@ -21,7 +21,7 @@ export interface ApiResponse<T> {
 }
 
 function getAuthHeader(): HeadersInit {
-  const token = typeof window !== "undefined" ? localStorage.getItem("lostlink_token") : null
+  const token = typeof window !== "undefined" ? localStorage.getItem("FindMyThing_token") : null
   return token ? { Authorization: `Bearer ${token}` } : {}
 }
 
