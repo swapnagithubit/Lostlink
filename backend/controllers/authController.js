@@ -2,9 +2,9 @@ const User = require("../models/User");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const crypto = require("crypto");
-const { TransactionalEmailsApi } = require("@getbrevo/brevo");
+const brevo = require("@getbrevo/brevo");
 
-const brevoClient = new TransactionalEmailsApi();
+const brevoClient = new brevo.TransactionalEmailsApi();
 brevoClient.authentications["apiKey"].apiKey = process.env.BREVO_API_KEY;
 
 // Signup
@@ -76,9 +76,8 @@ exports.forgotPassword = async (req, res) => {
       return res.status(404).json({ error: "No account found with this email" });
     }
 
-    // Generate reset token
     const resetToken = crypto.randomBytes(32).toString("hex");
-    const resetTokenExpiry = Date.now() + 3600000; // 1 hour
+    const resetTokenExpiry = Date.now() + 3600000;
 
     user.resetToken = resetToken;
     user.resetTokenExpiry = resetTokenExpiry;
@@ -86,7 +85,6 @@ exports.forgotPassword = async (req, res) => {
 
     const resetLink = `${process.env.CLIENT_URL}/reset-password?token=${resetToken}`;
 
-    // Send email via Brevo
     await brevoClient.sendTransacEmail({
       sender: { name: "FindMyThing", email: process.env.BREVO_SENDER_EMAIL },
       to: [{ email: user.email, name: user.name }],
@@ -142,7 +140,6 @@ exports.resetPassword = async (req, res) => {
     }
 
     const hashed = await bcrypt.hash(newPassword, 10);
-
     user.password = hashed;
     user.resetToken = undefined;
     user.resetTokenExpiry = undefined;
