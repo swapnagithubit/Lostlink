@@ -87,7 +87,7 @@ exports.forgotPassword = async (req, res) => {
     await sgMail.send({
       to: user.email,
       from: {
-        email: process.env.SENDGRID_SENDER,
+        email: "findmything.app@gmail.com",
         name: "FindMyThing"
       },
       subject: "Reset Your FindMyThing Password",
