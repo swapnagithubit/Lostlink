@@ -9,6 +9,7 @@ export interface Item {
   community: string
   image?: string
   status: string
+  phone?:string
   user: string
   createdAt: string
   updatedAt: string

@@ -8,11 +8,12 @@ import {
   Clock,
   Tag,
   User,
-  Mail,
   Package,
   Search,
   CheckCircle,
   Loader2,
+  Phone,
+  MessageCircle,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
@@ -69,6 +70,8 @@ export function ItemDetail({ item, isLoading, error }: ItemDetailProps) {
       day: "numeric",
     })
   }
+
+  const cleanPhone = item.phone?.replace(/[^0-9+]/g, "") || ""
 
   return (
     <div className="mx-auto max-w-4xl">
@@ -221,10 +224,47 @@ export function ItemDetail({ item, isLoading, error }: ItemDetailProps) {
                   ? "If you found this item, please contact the owner."
                   : "If this is your item, please contact the finder."}
               </p>
-              <Button className="w-full gap-2">
-                <Mail className="h-4 w-4" />
-                Contact {isLost ? "Owner" : "Finder"}
-              </Button>
+
+              {item.phone ? (
+                <div className="space-y-3">
+                  {/* Phone Display */}
+                  <div className="flex items-center gap-3 rounded-xl bg-accent/50 p-3">
+                    <div className="rounded-lg bg-primary/10 p-2">
+                      <Phone className="h-5 w-5 text-primary" />
+                    </div>
+                    <div>
+                      <p className="text-xs text-muted-foreground">Contact Number</p>
+                      <p className="font-semibold">{item.phone}</p>
+                    </div>
+                  </div>
+
+                  {/* Call Button */}
+                  <Button
+                    className="w-full gap-2 bg-gradient-to-r from-primary to-violet-500"
+                    onClick={() => window.open(`tel:${cleanPhone}`)}
+                  >
+                    <Phone className="h-4 w-4" />
+                    Call {isLost ? "Owner" : "Finder"}
+                  </Button>
+
+                  {/* WhatsApp Button */}
+                  <Button
+                    variant="outline"
+                    className="w-full gap-2 border-emerald-500/50 text-emerald-600 hover:bg-emerald-500/10"
+                    onClick={() => window.open(`https://wa.me/${cleanPhone}`)}
+                  >
+                    <MessageCircle className="h-4 w-4" />
+                    WhatsApp
+                  </Button>
+                </div>
+              ) : (
+                <div className="rounded-xl bg-accent/50 p-4 text-center">
+                  <Phone className="mx-auto h-8 w-8 text-muted-foreground/40" />
+                  <p className="mt-2 text-sm text-muted-foreground">
+                    No contact number provided for this item.
+                  </p>
+                </div>
+              )}
             </CardContent>
           </Card>
         </motion.div>

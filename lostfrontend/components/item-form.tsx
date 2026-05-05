@@ -3,7 +3,7 @@
 import { useState, useRef } from "react"
 import { useRouter } from "next/navigation"
 import { motion, AnimatePresence } from "framer-motion"
-import { Package, Search, MapPin, FileText, Tag, ImageIcon, Loader2, CheckCircle, AlertCircle, Sparkles, Zap, PartyPopper, Building2, Coffee, BookOpen, Dumbbell, Bus, ShoppingBag, TreePine, Upload, X, Image as ImageComponent } from "lucide-react"
+import { Package, Search, MapPin, FileText, Tag, ImageIcon, Loader2, CheckCircle, AlertCircle, Sparkles, Zap, PartyPopper, Building2, Coffee, BookOpen, Dumbbell, Bus, ShoppingBag, TreePine, Upload, X, Image as ImageComponent, Phone } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
@@ -47,6 +47,7 @@ export function ItemForm({ type }: ItemFormProps) {
     location: "",
     community: "library",
     image: "",
+    phone: "",
   })
 
   const isLost = type === "lost"
@@ -70,7 +71,6 @@ export function ItemForm({ type }: ItemFormProps) {
       reader.onload = (event) => {
         const result = event.target?.result as string
         setImagePreview(result)
-        // Note: We show preview locally but won't send base64 to backend to avoid size issues
         setError(null)
       }
       reader.readAsDataURL(file)
@@ -136,7 +136,6 @@ export function ItemForm({ type }: ItemFormProps) {
           >
             <Card className="overflow-hidden rounded-3xl border-0 bg-gradient-to-br from-emerald-500/10 via-card to-teal-500/10 shadow-2xl">
               <CardContent className="py-16 text-center">
-                {/* Success Animation */}
                 <motion.div
                   initial={{ scale: 0 }}
                   animate={{ scale: 1 }}
@@ -153,7 +152,6 @@ export function ItemForm({ type }: ItemFormProps) {
                   />
                 </motion.div>
 
-                {/* Confetti effect */}
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -230,24 +228,17 @@ export function ItemForm({ type }: ItemFormProps) {
       <Navbar />
       
       <div className="relative min-h-screen px-4 pb-16 pt-24 lg:pt-28">
-        {/* Animated Background */}
         <div className="pointer-events-none fixed inset-0 -z-10 overflow-hidden">
           <div className="mesh-gradient absolute inset-0 opacity-50" />
           <motion.div
-            animate={{
-              x: [0, 50, 0],
-              y: [0, -30, 0],
-            }}
+            animate={{ x: [0, 50, 0], y: [0, -30, 0] }}
             transition={{ repeat: Infinity, duration: 20, ease: "easeInOut" }}
             className={`absolute left-0 top-1/4 h-72 w-72 rounded-full ${
               isLost ? "bg-rose-500/20" : "bg-emerald-500/20"
             } blur-3xl`}
           />
           <motion.div
-            animate={{
-              x: [0, -40, 0],
-              y: [0, 40, 0],
-            }}
+            animate={{ x: [0, -40, 0], y: [0, 40, 0] }}
             transition={{ repeat: Infinity, duration: 25, ease: "easeInOut", delay: 2 }}
             className={`absolute right-0 bottom-1/4 h-80 w-80 rounded-full ${
               isLost ? "bg-orange-500/15" : "bg-teal-500/15"
@@ -260,7 +251,6 @@ export function ItemForm({ type }: ItemFormProps) {
           animate={{ opacity: 1, y: 0 }}
           className="mx-auto max-w-2xl"
         >
-          {/* Glow effect */}
           <div className={`absolute -inset-1 rounded-[2rem] bg-gradient-to-r ${
             isLost 
               ? "from-rose-500/30 via-orange-500/30 to-amber-500/30" 
@@ -268,7 +258,6 @@ export function ItemForm({ type }: ItemFormProps) {
           } opacity-40 blur-xl`} />
           
           <Card className="relative overflow-hidden rounded-3xl border-0 bg-card/90 shadow-2xl backdrop-blur-xl">
-            {/* Gradient border */}
             <div className={`absolute inset-0 rounded-3xl bg-gradient-to-r ${
               isLost 
                 ? "from-rose-500/20 via-orange-500/20 to-amber-500/20"
@@ -277,7 +266,6 @@ export function ItemForm({ type }: ItemFormProps) {
             <div className="absolute inset-[1px] rounded-[23px] bg-card" />
 
             <CardHeader className="relative z-10 pb-4 text-center">
-              {/* Icon */}
               <motion.div
                 initial={{ scale: 0, rotate: -180 }}
                 animate={{ scale: 1, rotate: 0 }}
@@ -407,6 +395,35 @@ export function ItemForm({ type }: ItemFormProps) {
                   />
                 </motion.div>
 
+                {/* Phone Number */}
+                <motion.div
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.35 }}
+                  className="space-y-2"
+                >
+                  <Label htmlFor="phone" className="flex items-center gap-2 text-sm font-medium">
+                    <Phone className="h-4 w-4 text-primary" />
+                    Contact Number
+                  </Label>
+                  <div className="relative">
+                    <Input
+                      id="phone"
+                      type="tel"
+                      placeholder="e.g., +91 9876543210"
+                      value={formData.phone}
+                      onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                      onFocus={() => setFocusedField("phone")}
+                      onBlur={() => setFocusedField(null)}
+                      required
+                      className={`h-12 rounded-xl border-2 bg-accent/30 pl-11 text-base transition-all ${
+                        focusedField === "phone" ? "border-primary ring-4 ring-primary/10" : "border-transparent"
+                      }`}
+                    />
+                    <Phone className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                  </div>
+                </motion.div>
+
                 {/* Community / Area */}
                 <motion.div
                   initial={{ opacity: 0, x: -20 }}
@@ -457,7 +474,6 @@ export function ItemForm({ type }: ItemFormProps) {
                     Add Image <span className="text-muted-foreground">(optional)</span>
                   </Label>
 
-                  {/* Image Preview */}
                   <AnimatePresence>
                     {imagePreview && (
                       <motion.div
@@ -466,7 +482,6 @@ export function ItemForm({ type }: ItemFormProps) {
                         exit={{ opacity: 0, scale: 0.9 }}
                         className="relative overflow-hidden rounded-xl border-2 border-primary/30 bg-accent/50"
                       >
-                        {/* eslint-disable-next-line @next/next/no-img-element */}
                         <img
                           src={imagePreview}
                           alt="Preview"
@@ -488,7 +503,6 @@ export function ItemForm({ type }: ItemFormProps) {
                     )}
                   </AnimatePresence>
 
-                  {/* Image Method Selector */}
                   <div className="flex gap-2">
                     <motion.button
                       type="button"
@@ -524,7 +538,6 @@ export function ItemForm({ type }: ItemFormProps) {
                     </motion.button>
                   </div>
 
-                  {/* File Input */}
                   {imageMethod === "file" && (
                     <motion.div
                       initial={{ opacity: 0, height: 0 }}
@@ -549,7 +562,11 @@ export function ItemForm({ type }: ItemFormProps) {
                       </div>
                       <div className="rounded-lg border border-amber-500/30 bg-amber-500/10 p-3">
                         <p className="text-xs text-amber-700">
-                          💡 <strong>Tip:</strong> For best results, use an image URL. You can upload your image to <a href="https://imgur.com" target="_blank" rel="noopener noreferrer" className="underline font-semibold hover:text-amber-800">Imgur</a> or <a href="https://imgbb.com" target="_blank" rel="noopener noreferrer" className="underline font-semibold hover:text-amber-800">ImgBB</a> (free), then paste the URL below.
+                          💡 <strong>Tip:</strong> For best results, use an image URL. Upload to{" "}
+                          <a href="https://imgur.com" target="_blank" rel="noopener noreferrer" className="underline font-semibold hover:text-amber-800">Imgur</a>{" "}
+                          or{" "}
+                          <a href="https://imgbb.com" target="_blank" rel="noopener noreferrer" className="underline font-semibold hover:text-amber-800">ImgBB</a>{" "}
+                          (free), then paste the URL.
                         </p>
                       </div>
                       <input
@@ -563,7 +580,6 @@ export function ItemForm({ type }: ItemFormProps) {
                     </motion.div>
                   )}
 
-                  {/* URL Input */}
                   {imageMethod === "url" && (
                     <motion.div
                       initial={{ opacity: 0, height: 0 }}

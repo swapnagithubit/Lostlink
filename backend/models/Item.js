@@ -25,14 +25,12 @@ const itemSchema = new mongoose.Schema(
       type: String,
       default: "open"
     },
-
-    // 🔥 ADD THIS (IMPORTANT)
+    phone: String,
     user: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: true
     }
-
   },
   { timestamps: true }
 );
