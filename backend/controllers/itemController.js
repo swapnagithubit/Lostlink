@@ -16,7 +16,6 @@ exports.addItem = async (req, res) => {
     const io = req.app.get("io");
     const userSockets = req.app.get("userSockets");
 
-    // Notify the specific user who lost the matched item
     if (matches.length > 0) {
       matches.forEach((match) => {
         const socketId = userSockets[match.user.toString()];
